@@ -12,7 +12,8 @@ HexagonShape::HexagonShape(uint32_t size, sf::Vector2f position) {
   
   // Temporary cruft
   m_polygon.setOutlineColor(sf::Color::Red);
-  m_polygon.setOutlineThickness(5);
+  m_polygon.setOutlineThickness(2);
+  m_polygon.setFillColor(sf::Color::Black);
   m_polygon.setPosition(position);
 }
 

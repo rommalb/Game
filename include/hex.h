@@ -52,8 +52,11 @@ namespace hex
   // Grid conversions
   sf::Vector2i cube_to_axial(const sf::Vector3i& cube_coord);
   sf::Vector3i axial_to_cube(const sf::Vector2i& hex_coord);
-  sf::Vector3i grid_to_cube(const sf::Vector2i& grid);
 
   // Hexagon drawing helpers
   sf::Vector2f hex_corner(const sf::Vector2f center, uint32_t size, uint32_t i);
+
+  // Hex and pixel conversions
+  sf::Vector2f axial_to_pixel(sf::Vector2i hex_coord, uint32_t size);
+  sf::Vector2i pixel_to_axial(sf::Vector2f pixel, uint32_t size);
 }

@@ -26,21 +26,21 @@ sf::Vector3i hex::axial_to_cube(const sf::Vector2i& hex_coord) {
   return sf::Vector3i(hex_coord.x, hex_coord.y, -hex_coord.x - hex_coord.y);
 }
 
-// Offset coordinate conversion, every odd row we offset
-sf::Vector3i hex::grid_to_cube(const sf::Vector2i& grid) {
-  const uint32_t col = grid.x;
-  const uint32_t row = grid.y;
-
-  const uint32_t x = col - (row - (row & 1)) / 2;
-  const uint32_t z = row;
-  const uint32_t y = -x - z;
-
-  return sf::Vector3i(x, y, z);
-}
-
 sf::Vector2f hex::hex_corner(const sf::Vector2f center, uint32_t size, uint32_t i) {
   // Corners of hex are 60 degrees apart starting at 30 degress (lower right corner)
-  uint32_t angle = 60 * i + 30;
-  float rad = PI / 180 * angle;
+  const uint32_t angle = 60 * i + 30;
+  const float rad = PI / 180 * angle;
   return sf::Vector2f(center.x + size * cos(rad), center.y + size * sin(rad));
+}
+
+sf::Vector2f hex::axial_to_pixel(sf::Vector2i hex_coord, uint32_t size) {
+  const float x = size * sqrt(3) * (hex_coord.x + hex_coord.y / 2);
+  const float y = size * (3 / 2) * hex_coord.y;
+  return sf::Vector2f(x, y);
+}
+
+sf::Vector2i hex::pixel_to_axial(sf::Vector2f pixel, uint32_t size) {
+  const float x = (pixel.x * (sqrt(3) / 3) - pixel.y / 3) / size;
+  const float y = pixel.y * (2 / 3) / size;
+  return sf::Vector2i(static_cast<int32_t>(roundf(x)), static_cast<int32_t>(roundf(y)));
 }

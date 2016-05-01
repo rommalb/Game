@@ -11,7 +11,9 @@ int main() {
   
   sf::RenderWindow window(sf::VideoMode(1280, 720), "Foobar");
 
-  HexagonShape hex(50, sf::Vector2f(100.0f, 100.0f));
+  sf::Vector2i hex(0, 0);
+
+  HexagonShape hexagon_shape(50, hex::axial_to_pixel(hex, 50));
 
   while (window.isOpen()) {
     sf::Event event;
@@ -23,18 +25,9 @@ int main() {
     }
 
     window.clear();
-    window.draw(hex.get_drawable());
+    window.draw(hexagon_shape.get_drawable());
     window.display();
   }
-
-  // sf::Vector2i axial(0, 0);
-  // sf::Vector3i cube(0, 0, 0);
-
-  // std::cout << format::vector2(axial) << std::endl;
-  // std::cout << format::vector3(cube) << std::endl;
-
-  // std::cout << format::axial_neighbors(axial) << std::endl;
-  // std::cout << format::cube_neighbors(cube) << std::endl;
 
   return 0;
 }

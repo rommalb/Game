@@ -10,6 +10,5 @@ public:
 
   const sf::Drawable& get_drawable() const;
 
-private:
   sf::ConvexShape m_polygon;
 };
