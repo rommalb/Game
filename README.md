@@ -12,5 +12,5 @@ I have compiled and run this project on mac using clang-602.0.53. Since I did no
 6. Copy all the frameworks from the SFML source download extlibs/libs-osx/Frameworks/ to your Frameworks directory
 7. Run make in this directory and run the game
 
-# Linux Instrunctions
+# Linux Instructions
 These instructions should be very similar to the Mac instructions but without the frameworks. You'll want to generate .so files and copy them into lib. You may need to download SFMLs dependencies, OpenGL, etc if your distro of linux doesn't have them. I will need to test this on my Ubuntu distro and update the readme.
