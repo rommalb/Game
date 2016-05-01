@@ -11,7 +11,7 @@ SRCS    := $(shell find $(SRCDIR) -name '*.cpp')
 SRCDIRS := $(shell find . -name '*.cpp' -exec dirname {} \; | uniq)
 OBJS    := $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 
-CFLAGS  = -c -Wall -I$(INCDIR)
+CFLAGS  = -std=c++11 -c -Wall -I$(INCDIR)
 LDFLAGS = -rpath $(LIBDIR) -L$(LIBDIR) -lsfml-graphics -lsfml-window -lsfml-system
 
 all: $(APP)
