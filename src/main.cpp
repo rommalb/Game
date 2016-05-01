@@ -1,12 +1,16 @@
 #include <SFML/Graphics.hpp>
 
+#include <iostream>
+
 #include "camera.h"
+#include "constants.h"
 #include "format.h"
 #include "hex.h"
 #include "hexagon_shape.h"
+#include "map.h"
 
 int main() {
-  sf::RenderWindow window(sf::VideoMode(1280, 720), "Foobar");
+  sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Foobar");
 
   sf::View view;
   view.reset(sf::FloatRect(0, 0, 1280.0f, 720.0f));
@@ -16,11 +20,19 @@ int main() {
   Camera camera(window, view);
 
   // Center the camera at 0, 0
-  camera.move_to(sf::Vector2f(0.0f, 0.0f));
+  camera.move_to(START_PIXEL);
 
-  sf::Vector2i hex(0, 0);
+  HexagonShape hexagon_shape(HEX_SIZE, START_PIXEL);
 
-  HexagonShape hexagon_shape(50, hex::axial_to_pixel(hex, 50));
+  map::initialize(MAP_DISTANCE);
+
+  // Function responsible for drawing the hexagon shapes
+  std::function<void(const sf::Vector3i&)> draw_hex = [&](const sf::Vector3i& coord) {
+    sf::Vector2i offset = hex::cube_to_offset(coord);
+    sf::Vector2f pixel = hex::offset_to_pixel(offset, HEX_SIZE);
+    hexagon_shape.m_polygon.setPosition(pixel);
+    window.draw(hexagon_shape.get_drawable());
+  };
 
   while (window.isOpen()) {
     sf::Event event;
@@ -32,7 +44,7 @@ int main() {
     }
 
     window.clear();
-    window.draw(hexagon_shape.get_drawable());
+    map::for_each_tile(draw_hex);
     window.display();
   }
 

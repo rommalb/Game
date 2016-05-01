@@ -1,9 +1,12 @@
 #include "hex.h"
 
+#include <algorithm> 
+#include <cstdlib>
 #include <cmath>
 
 namespace {
   const static float PI = 3.1415926535897f;
+  const static float SQRT_3 = 1.73205080757f;
 }
 
 hex::CubeNeighbors::CubeNeighbors(const sf::Vector3i& start) {
@@ -22,25 +25,82 @@ sf::Vector2i hex::cube_to_axial(const sf::Vector3i& cube_coord) {
   return sf::Vector2i(cube_coord.x, cube_coord.y);
 }
 
+sf::Vector2f hex::cube_to_axial(const sf::Vector3f& cube_coord) {
+  return sf::Vector2f(cube_coord.x, cube_coord.y);
+}
+
+sf::Vector2i hex::cube_to_offset(const sf::Vector3i& cube_coord) {
+  int32_t col = cube_coord.x + (cube_coord.z - (cube_coord.z & 1)) / 2;
+  int32_t row = cube_coord.z;
+  return sf::Vector2i(col, row);
+}
+
 sf::Vector3i hex::axial_to_cube(const sf::Vector2i& hex_coord) {
-  return sf::Vector3i(hex_coord.x, hex_coord.y, -hex_coord.x - hex_coord.y);
+ return sf::Vector3i(hex_coord.x, hex_coord.y, -hex_coord.x - hex_coord.y);
+}
+
+sf::Vector3f hex::axial_to_cube(const sf::Vector2f& hex_coord) {
+  return sf::Vector3f(hex_coord.x, hex_coord.y, -hex_coord.x - hex_coord.y);
 }
 
 sf::Vector2f hex::hex_corner(const sf::Vector2f center, uint32_t size, uint32_t i) {
   // Corners of hex are 60 degrees apart starting at 30 degress (lower right corner)
   const uint32_t angle = 60 * i + 30;
-  const float rad = PI / 180 * angle;
+  const float rad = PI / 180.0f * angle;
   return sf::Vector2f(center.x + size * cos(rad), center.y + size * sin(rad));
 }
 
 sf::Vector2f hex::axial_to_pixel(sf::Vector2i hex_coord, uint32_t size) {
-  const float x = size * sqrt(3) * (hex_coord.x + hex_coord.y / 2);
-  const float y = size * (3 / 2) * hex_coord.y;
+  const float x = size * SQRT_3 * (hex_coord.x + (hex_coord.y / 2));
+  const float y = size * (3.0f / 2.0f) * hex_coord.y;
   return sf::Vector2f(x, y);
 }
 
 sf::Vector2i hex::pixel_to_axial(sf::Vector2f pixel, uint32_t size) {
-  const float x = (pixel.x * (sqrt(3) / 3) - pixel.y / 3) / size;
-  const float y = pixel.y * (2 / 3) / size;
-  return sf::Vector2i(static_cast<int32_t>(roundf(x)), static_cast<int32_t>(roundf(y)));
+  const float x = (pixel.x * (SQRT_3 / 3.0f) - pixel.y / 3.0f) / size;
+  const float y = pixel.y * (2.0f / 3.0f) / size;
+  return axial_round(sf::Vector2f(x, y));
+}
+
+sf::Vector2f hex::offset_to_pixel(sf::Vector2i hex_coord, uint32_t size) {
+  const float x = size * SQRT_3 * (hex_coord.x + 0.5 * (hex_coord.y & 1));
+  const float y = size * (3.0f / 2.0f) * hex_coord.y;
+  return sf::Vector2f(x, y);
+}
+
+sf::Vector3i hex::cube_round(const sf::Vector3f pixel_coord) {
+  int32_t rx = static_cast<int32_t>(roundf(pixel_coord.x));
+  int32_t ry = static_cast<int32_t>(roundf(pixel_coord.y));
+  int32_t rz = static_cast<int32_t>(roundf(pixel_coord.z));
+
+  float dx = fabs(rx - pixel_coord.x);
+  float dy = fabs(ry - pixel_coord.y);
+  float dz = fabs(rz - pixel_coord.z);
+
+  if (dx > dy && dx > dz) {
+    rx = -ry - rz;
+  }
+  else if (dy > dz) {
+    ry = -rx - rz;
+  }
+  else {
+    rz = -rx - ry;
+  }
+
+  return sf::Vector3i(rx, ry, rz);
+}
+
+sf::Vector2i hex::axial_round(const sf::Vector2f pixel_coord) {
+  return cube_to_axial(cube_round(axial_to_cube(pixel_coord)));
+}
+
+int32_t hex::cube_distance(const sf::Vector3i a, const sf::Vector3i b) {
+  return std::max( { std::abs(a.x - b.x), std::abs(a.y - b.y), std::abs(a.z - b.z) } );
+}
+
+int32_t hex::axial_distance(const sf::Vector2i a, const sf::Vector2i b) {
+  // Convert to cube coordinates and get distance
+  sf::Vector3i ac = axial_to_cube(a);
+  sf::Vector3i bc = axial_to_cube(b);
+  return cube_distance(ac, bc);
 }
