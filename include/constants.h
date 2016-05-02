@@ -6,16 +6,17 @@
 // 
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/System/Vector3.hpp>
 
 #include <cstdint>
 
 // Some ugly constants
 
-static const uint32_t WINDOW_WIDTH = 1280;
-static const uint32_t WINDOW_HEIGHT = 720;
+extern const uint32_t WINDOW_WIDTH;
+extern const uint32_t WINDOW_HEIGHT;
 
-static const uint32_t HEX_SIZE = 50;
+extern const uint32_t HEX_SIZE;
 // Distance in every direction from center, 0,0 grid
-static const int32_t MAP_DISTANCE = 3;
-static const sf::Vector2f START_PIXEL(0.0f, 0.0f);
-static const sf::Vector3i START_CUBE(0, 0, 0);
+extern const int32_t MAP_DISTANCE;
+extern const sf::Vector2f START_PIXEL;
+extern const sf::Vector3i START_CUBE;
