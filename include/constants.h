@@ -18,3 +18,4 @@ static const uint32_t HEX_SIZE = 50;
 // Distance in every direction from center, 0,0 grid
 static const int32_t MAP_DISTANCE = 3;
 static const sf::Vector2f START_PIXEL(0.0f, 0.0f);
+static const sf::Vector3i START_CUBE(0, 0, 0);

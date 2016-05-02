@@ -50,32 +50,36 @@ sf::Vector2f hex::hex_corner(const sf::Vector2f center, uint32_t size, uint32_t 
   return sf::Vector2f(center.x + size * cos(rad), center.y + size * sin(rad));
 }
 
-sf::Vector2f hex::axial_to_pixel(sf::Vector2i hex_coord, uint32_t size) {
-  const float x = size * SQRT_3 * (hex_coord.x + (hex_coord.y / 2));
+sf::Vector2f hex::axial_to_pixel(const sf::Vector2i& hex_coord, uint32_t size) {
+  const float x = size * SQRT_3 * (hex_coord.x + (hex_coord.y / 2.0f));
   const float y = size * (3.0f / 2.0f) * hex_coord.y;
   return sf::Vector2f(x, y);
 }
 
-sf::Vector2i hex::pixel_to_axial(sf::Vector2f pixel, uint32_t size) {
+sf::Vector2i hex::pixel_to_axial(const sf::Vector2f& pixel, uint32_t size) {
   const float x = (pixel.x * (SQRT_3 / 3.0f) - pixel.y / 3.0f) / size;
   const float y = pixel.y * (2.0f / 3.0f) / size;
   return axial_round(sf::Vector2f(x, y));
 }
 
-sf::Vector2f hex::offset_to_pixel(sf::Vector2i hex_coord, uint32_t size) {
+sf::Vector2f hex::offset_to_pixel(const sf::Vector2i& hex_coord, uint32_t size) {
+  // Bitwise & is to tell if the cord is odd or not. We offset every odd row
   const float x = size * SQRT_3 * (hex_coord.x + 0.5 * (hex_coord.y & 1));
   const float y = size * (3.0f / 2.0f) * hex_coord.y;
   return sf::Vector2f(x, y);
 }
 
-sf::Vector3i hex::cube_round(const sf::Vector3f pixel_coord) {
+// Rounding must maintain x + y + z = 0 
+sf::Vector3i hex::cube_round(const sf::Vector3f& pixel_coord) {
+  // Round all the components
   int32_t rx = static_cast<int32_t>(roundf(pixel_coord.x));
   int32_t ry = static_cast<int32_t>(roundf(pixel_coord.y));
   int32_t rz = static_cast<int32_t>(roundf(pixel_coord.z));
 
-  float dx = fabs(rx - pixel_coord.x);
-  float dy = fabs(ry - pixel_coord.y);
-  float dz = fabs(rz - pixel_coord.z);
+  // Fix them to maintain equality
+  const float dx = fabs(rx - pixel_coord.x);
+  const float dy = fabs(ry - pixel_coord.y);
+  const float dz = fabs(rz - pixel_coord.z);
 
   if (dx > dy && dx > dz) {
     rx = -ry - rz;
@@ -90,15 +94,15 @@ sf::Vector3i hex::cube_round(const sf::Vector3f pixel_coord) {
   return sf::Vector3i(rx, ry, rz);
 }
 
-sf::Vector2i hex::axial_round(const sf::Vector2f pixel_coord) {
+sf::Vector2i hex::axial_round(const sf::Vector2f& pixel_coord) {
   return cube_to_axial(cube_round(axial_to_cube(pixel_coord)));
 }
 
-int32_t hex::cube_distance(const sf::Vector3i a, const sf::Vector3i b) {
+int32_t hex::cube_distance(const sf::Vector3i& a, const sf::Vector3i& b) {
   return std::max( { std::abs(a.x - b.x), std::abs(a.y - b.y), std::abs(a.z - b.z) } );
 }
 
-int32_t hex::axial_distance(const sf::Vector2i a, const sf::Vector2i b) {
+int32_t hex::axial_distance(const sf::Vector2i& a, const sf::Vector2i& b) {
   // Convert to cube coordinates and get distance
   sf::Vector3i ac = axial_to_cube(a);
   sf::Vector3i bc = axial_to_cube(b);

@@ -62,16 +62,16 @@ namespace hex
   sf::Vector2f hex_corner(const sf::Vector2f center, uint32_t size, uint32_t i);
 
   // Hex and pixel conversions
-  sf::Vector2f axial_to_pixel(sf::Vector2i hex_coord, uint32_t size);
-  sf::Vector2i pixel_to_axial(sf::Vector2f pixel, uint32_t size);
-  sf::Vector2f offset_to_pixel(sf::Vector2i hex_coord, uint32_t size);
+  sf::Vector2f axial_to_pixel(const sf::Vector2i& hex_coord, uint32_t size);
+  sf::Vector2i pixel_to_axial(const sf::Vector2f& pixel, uint32_t size);
+  sf::Vector2f offset_to_pixel(const sf::Vector2i& hex_coord, uint32_t size);
 
   // Rounding pixel coord to axial and cube coordinates
   // Cube coordinates must mantain x + y + z = 0 therefore a round of componenets isn't enough
-  sf::Vector3i cube_round(const sf::Vector3f pixel_coord);
-  sf::Vector2i axial_round(const sf::Vector2f pixel_coord);
+  sf::Vector3i cube_round(const sf::Vector3f& pixel_coord);
+  sf::Vector2i axial_round(const sf::Vector2f& pixel_coord);
 
   // Distance of coordinates
-  int32_t cube_distance(const sf::Vector3i a, const sf::Vector3i b);
-  int32_t axial_distance(const sf::Vector2i a, const sf::Vector2i b);
+  int32_t cube_distance(const sf::Vector3i& a, const sf::Vector3i& b);
+  int32_t axial_distance(const sf::Vector2i& a, const sf::Vector2i& b);
 }
