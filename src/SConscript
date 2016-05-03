@@ -1,0 +1,9 @@
+Import('env')
+
+env['LIBS'] = ['sfml-audio.lib', 'sfml-graphics.lib', 'sfml-network.lib', 'sfml-system.lib', 'sfml-window.lib']
+
+srcFiles = Glob('*.cpp')
+
+env.Program('MyProgram', source=srcFiles)
+
+Return('srcFiles')

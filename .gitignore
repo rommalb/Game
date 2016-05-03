@@ -26,3 +26,8 @@
 *.exe
 *.out
 *.app
+
+#Project folders
+projects/
+#Contrib folders (external binaries)
+contrib/
