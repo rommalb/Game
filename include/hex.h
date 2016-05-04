@@ -65,6 +65,7 @@ namespace hex
 
   // Hex and pixel conversions
   sf::Vector2f axial_to_world(const sf::Vector2i& axial_coord, uint32_t size);
+  sf::Vector2f cube_to_world(const sf::Vector3i& cube_coord, uint32_t size);
   sf::Vector2f offset_to_world(const sf::Vector2i& axial_coord, uint32_t size);
 
   sf::Vector2i world_to_axial(const sf::Vector2f& world_coord, uint32_t size);

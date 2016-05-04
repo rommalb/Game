@@ -62,6 +62,10 @@ sf::Vector2f hex::axial_to_world(const sf::Vector2i& axial_coord, uint32_t size)
   return sf::Vector2f(x, y);
 }
 
+sf::Vector2f hex::cube_to_world(const sf::Vector3i& cube_coord, uint32_t size) {
+  return axial_to_world(cube_to_axial(cube_coord), size);
+}
+
 sf::Vector2f hex::offset_to_world(const sf::Vector2i& axial_coord, uint32_t size) {
   // Bitwise & is to tell if the cord is odd or not. We offset every odd row
   const float x = size * SQRT_3 * (axial_coord.x + 0.5 * (axial_coord.y & 1));

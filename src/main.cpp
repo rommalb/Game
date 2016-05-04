@@ -27,10 +27,9 @@ int main() {
   map::build(START_CUBE, MAP_DISTANCE);
 
   // Function responsible for drawing the hexagon shapes
-  std::function<void(const sf::Vector3i&)> draw_hex = [&](const sf::Vector3i& coord) {
-    const sf::Vector2i offset = hex::cube_to_offset(coord);
-    const sf::Vector2f pixel = hex::offset_to_world(offset, HEX_SIZE);
-    hexagon_shape.m_polygon.setPosition(pixel);
+  std::function<void(const sf::Vector3i&)> draw_hex = [&](const sf::Vector3i& cube_coord) {
+    const sf::Vector2f world = hex::cube_to_world(cube_coord, HEX_SIZE);
+    hexagon_shape.m_polygon.setPosition(world);
     window.draw(hexagon_shape.get_drawable());
   };
 
