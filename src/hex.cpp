@@ -56,31 +56,31 @@ sf::Vector2f hex::hex_corner(const sf::Vector2f center, uint32_t size, uint32_t 
   return sf::Vector2f(center.x + size * cos(rad), center.y + size * sin(rad));
 }
 
-sf::Vector2f hex::axial_to_pixel(const sf::Vector2i& axial_coord, uint32_t size) {
+sf::Vector2f hex::axial_to_world(const sf::Vector2i& axial_coord, uint32_t size) {
   const float x = size * SQRT_3 * (axial_coord.x + (axial_coord.y / 2.0f));
   const float y = size * (3.0f / 2.0f) * axial_coord.y;
   return sf::Vector2f(x, y);
 }
 
-sf::Vector2f hex::offset_to_pixel(const sf::Vector2i& axial_coord, uint32_t size) {
+sf::Vector2f hex::offset_to_world(const sf::Vector2i& axial_coord, uint32_t size) {
   // Bitwise & is to tell if the cord is odd or not. We offset every odd row
   const float x = size * SQRT_3 * (axial_coord.x + 0.5 * (axial_coord.y & 1));
   const float y = size * (3.0f / 2.0f) * axial_coord.y;
   return sf::Vector2f(x, y);
 }
 
-sf::Vector2i hex::pixel_to_axial(const sf::Vector2i& pixel, uint32_t size) {
-  const float x = (pixel.x * (SQRT_3 / 3.0f) - pixel.y / 3.0f) / size;
-  const float y = pixel.y * (2.0f / 3.0f) / size;
+sf::Vector2i hex::world_to_axial(const sf::Vector2f& world_coord, uint32_t size) {
+  const float x = (world_coord.x * (SQRT_3 / 3.0f) - world_coord.y / 3.0f) / size;
+  const float y = world_coord.y * (2.0f / 3.0f) / size;
   return axial_round(sf::Vector2f(x, y));
 }
 
-sf::Vector3i hex::pixel_to_cube(const sf::Vector2i& pixel, uint32_t size) {
-  return axial_to_cube(pixel_to_axial(pixel, size));
+sf::Vector3i hex::world_to_cube(const sf::Vector2f& world_coord, uint32_t size) {
+  return axial_to_cube(world_to_axial(world_coord, size));
 }
 
-sf::Vector2i hex::pixel_to_offset(const sf::Vector2i& pixel, uint32_t size) {
-  return axial_to_offset(pixel_to_axial(pixel, size));
+sf::Vector2i hex::world_to_offset(const sf::Vector2f& world_coord, uint32_t size) {
+  return axial_to_offset(world_to_axial(world_coord, size));
 }
 
 // Rounding must maintain x + y + z = 0 

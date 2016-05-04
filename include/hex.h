@@ -64,12 +64,12 @@ namespace hex
   sf::Vector2f hex_corner(const sf::Vector2f center, uint32_t size, uint32_t i);
 
   // Hex and pixel conversions
-  sf::Vector2f axial_to_pixel(const sf::Vector2i& axial_coord, uint32_t size);
-  sf::Vector2f offset_to_pixel(const sf::Vector2i& axial_coord, uint32_t size);
+  sf::Vector2f axial_to_world(const sf::Vector2i& axial_coord, uint32_t size);
+  sf::Vector2f offset_to_world(const sf::Vector2i& axial_coord, uint32_t size);
 
-  sf::Vector2i pixel_to_axial(const sf::Vector2i& pixel, uint32_t size);
-  sf::Vector3i pixel_to_cube(const sf::Vector2i& pixel, uint32_t size);
-  sf::Vector2i pixel_to_offset(const sf::Vector2i& pixel, uint32_t size);
+  sf::Vector2i world_to_axial(const sf::Vector2f& world_coord, uint32_t size);
+  sf::Vector3i world_to_cube(const sf::Vector2f& world_coord, uint32_t size);
+  sf::Vector2i world_to_offset(const sf::Vector2f& world_coord, uint32_t size);
 
   // Rounding pixel coord to axial and cube coordinates
   // Cube coordinates must mantain x + y + z = 0 therefore a round of componenets isn't enough

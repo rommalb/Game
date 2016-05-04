@@ -22,12 +22,13 @@ void map::for_each_tile(std::function<void(const sf::Vector3i& coord)> operation
 }
 
 void map::update(const Camera& camera) {
-  sf::Vector2i mouse_position = sf::Mouse::getPosition(camera.get_window());
-  sf::Vector2i axial = hex::pixel_to_axial(mouse_position, HEX_SIZE);
-  sf::Vector3i cube = hex::pixel_to_cube(mouse_position, HEX_SIZE);
-  sf::Vector2i offset = hex::pixel_to_offset(mouse_position, HEX_SIZE);
-  std::cout << "Mouse: " 
-    << format::vector2(camera.get_window().mapPixelToCoords(mouse_position)) << " Axial: "
+  const sf::Vector2i mouse_position = sf::Mouse::getPosition(camera.get_window());
+  const sf::Vector2f world_position = camera.get_window().mapPixelToCoords(mouse_position);
+  const sf::Vector2i axial = hex::world_to_axial(world_position, HEX_SIZE);
+  const sf::Vector3i cube = hex::world_to_cube(world_position, HEX_SIZE);
+  const sf::Vector2i offset = hex::world_to_offset(world_position, HEX_SIZE);
+  std::cout << "World: " 
+    << format::vector2(world_position) << " Axial: "
     << format::vector2(axial)  << " Cube: "
     << format::vector3(cube)   << " Offset: "
     << format::vector2(offset) << std::endl;
