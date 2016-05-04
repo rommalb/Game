@@ -17,7 +17,7 @@ void font::init_font()
   }
 }
 
-bool font::render_string(sf::RenderWindow& renderWindow, std::string& displayText, sf::Vector2f& displayLocation)
+bool font::render_string(sf::RenderWindow& renderWindow, std::string& displayText, const sf::Vector2f& displayLocation)
 {
   if (s_ready)
   {

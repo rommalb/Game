@@ -11,5 +11,5 @@ namespace sf
 
 namespace font {
   void init_font();
-  bool render_string(sf::RenderWindow& renderWindow, std::string& displayText, sf::Vector2f& displayLocation);
+  bool render_string(sf::RenderWindow& renderWindow, std::string& displayText, const sf::Vector2f& displayLocation);
 }
