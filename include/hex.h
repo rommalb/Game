@@ -4,6 +4,7 @@
 #include <SFML/System/Vector3.hpp>
 
 #include <cstdint>
+#include <vector>
 
 namespace hex
 {
@@ -54,17 +55,21 @@ namespace hex
   sf::Vector2f cube_to_axial(const sf::Vector3f& cube_coord);
 
   sf::Vector2i cube_to_offset(const sf::Vector3i& cube_coord);
+  sf::Vector2i axial_to_offset(const sf::Vector2i& axial_coord);
 
-  sf::Vector3i axial_to_cube(const sf::Vector2i& hex_coord);
-  sf::Vector3f axial_to_cube(const sf::Vector2f& hex_coord);
+  sf::Vector3i axial_to_cube(const sf::Vector2i& axial_coord);
+  sf::Vector3f axial_to_cube(const sf::Vector2f& axial_coord);
 
   // Get the pixel coordinates to the i'th corner of a hexagon
   sf::Vector2f hex_corner(const sf::Vector2f center, uint32_t size, uint32_t i);
 
   // Hex and pixel conversions
-  sf::Vector2f axial_to_pixel(const sf::Vector2i& hex_coord, uint32_t size);
-  sf::Vector2i pixel_to_axial(const sf::Vector2f& pixel, uint32_t size);
-  sf::Vector2f offset_to_pixel(const sf::Vector2i& hex_coord, uint32_t size);
+  sf::Vector2f axial_to_pixel(const sf::Vector2i& axial_coord, uint32_t size);
+  sf::Vector2f offset_to_pixel(const sf::Vector2i& axial_coord, uint32_t size);
+
+  sf::Vector2i pixel_to_axial(const sf::Vector2i& pixel, uint32_t size);
+  sf::Vector3i pixel_to_cube(const sf::Vector2i& pixel, uint32_t size);
+  sf::Vector2i pixel_to_offset(const sf::Vector2i& pixel, uint32_t size);
 
   // Rounding pixel coord to axial and cube coordinates
   // Cube coordinates must mantain x + y + z = 0 therefore a round of componenets isn't enough
@@ -72,6 +77,10 @@ namespace hex
   sf::Vector2i axial_round(const sf::Vector2f& pixel_coord);
 
   // Distance of coordinates
-  int32_t cube_distance(const sf::Vector3i& a, const sf::Vector3i& b);
-  int32_t axial_distance(const sf::Vector2i& a, const sf::Vector2i& b);
+  uint32_t cube_distance(const sf::Vector3i& a, const sf::Vector3i& b);
+  uint32_t axial_distance(const sf::Vector2i& a, const sf::Vector2i& b);
+
+  // This function requires floating point cube-coordinates else a lerp on integer
+  // vectors would likely not maintain the equality x + y + z = 0
+  void cubes_on_line(const sf::Vector3f& a, const sf::Vector3f& b, std::vector<sf::Vector3i>& coords);
 }

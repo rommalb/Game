@@ -43,6 +43,8 @@ int main() {
       }
     }
 
+    map::update(camera);
+
     window.clear();
     map::for_each_tile(draw_hex);
     window.display();
