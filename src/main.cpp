@@ -1,9 +1,11 @@
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
+#include <string>
 
 #include "camera.h"
 #include "constants.h"
+#include "font.h"
 #include "format.h"
 #include "hex.h"
 #include "hexagon_shape.h"
@@ -11,6 +13,8 @@
 
 int main() {
   sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Foobar");
+
+  font::init_font();
 
   sf::View view;
   view.reset(sf::FloatRect(0, 0, 1280.0f, 720.0f));
@@ -42,9 +46,13 @@ int main() {
       }
     }
 
-    map::update(camera);
+    std::string mapPosition = map::update(camera);
 
     window.clear();
+    if (!font::render_string(window, mapPosition, sf::Vector2f(-320.f, 320.f)))
+    {
+      std::cout << mapPosition << std::endl;
+    }
     map::for_each_tile(draw_hex);
     window.display();
   }

@@ -1,6 +1,8 @@
 #include "map.h"
 
 #include <iostream>
+#include <sstream>
+#include <string>
 
 #include "constants.h"
 #include "format.h"
@@ -21,14 +23,17 @@ void map::for_each_tile(std::function<void(const sf::Vector3i& cube_coord)> oper
   }
 }
 
-void map::update(const Camera& camera) {
+std::string map::update(const Camera& camera) {
   const sf::Vector2i mouse_position = sf::Mouse::getPosition(camera.get_window());
   const sf::Vector2f world_position = camera.get_window().mapPixelToCoords(mouse_position);
   const sf::Vector2i axial = hex::world_to_axial(world_position, HEX_SIZE);
   const sf::Vector3i cube = hex::world_to_cube(world_position, HEX_SIZE);
   const sf::Vector2i offset = hex::world_to_offset(world_position, HEX_SIZE);
-  std::cout << "World: " << format::vector2(world_position) << " Axial: "
+
+  std::ostringstream ss;
+  ss << "World: " << format::vector2(world_position) << " Axial: "
     << format::vector2(axial)  << " Cube: "
     << format::vector3(cube)   << " Offset: "
-    << format::vector2(offset) << std::endl;
+    << format::vector2(offset);
+  return std::move(ss.str());
 }
