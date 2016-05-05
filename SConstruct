@@ -7,7 +7,7 @@ AddOption('--projects',
   action='store_true',
   help='Create visual studio project file')
   
-# Make required directories
+# Create required directories
 dirs = ['build', 'projects']
 for dir in dirs:
   try:
@@ -16,10 +16,18 @@ for dir in dirs:
     pass
 
 #Build Environment
-env = Environment(CPPPATH='#include', TARGET_ARCH='i386')
+env = Environment(TARGET_ARCH='i386')
 
+#Enable windows specific CXXFLAGS
+if env['PLATFORM'] == 'win32':
+  env['CXXCOM'] = env['CXXCOM'].replace("$CXXFLAGS", "$CXXWINFLAGS $CXXFLAGS")
+  
+#use CXXWINFLAGS
+env.Append(CXXWINFLAGS=['/EHsc'])
+
+#Paths
 env['LIBPATH'] = [os.path.join(GetOption('sfmlDir'), 'lib')]
-env.Append(CPPFLAGS=['/EHsc'])
+env.Append(CPPPATH=[Dir('#include').abspath])
 
 outdir='build'
 
@@ -27,6 +35,15 @@ allFiles = SConscript('src/SConscript', exports='env', variant_dir=outdir, dupli
 
 #project files
 if GetOption('projects'):
+  allIncludes = []
+  for cppPath in env['CPPPATH']:
+    for root, dirs, files in os.walk(cppPath):
+      filesWithPath = map(lambda f: os.path.join(root, f), files)
+      allIncludes.extend(filesWithPath)
+      
   relativeSrcPaths = map(lambda f: f.srcnode().path, allFiles)
   relativeToProjectDir = map(lambda f: os.path.relpath(f, 'projects'), relativeSrcPaths)
-  env.MSVSProject(target = 'projects/Game' + env['MSVSPROJECTSUFFIX'], srcs=relativeToProjectDir, variant='default')
+  env.MSVSProject(target = 'projects/Game' + env['MSVSPROJECTSUFFIX'],
+    srcs=relativeToProjectDir, 
+    incs=allIncludes, 
+    variant='default')
