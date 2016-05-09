@@ -18,13 +18,14 @@ These instructions should be very similar to the Mac instructions but without th
 # Windows Instructions
 Windows development can be handled via either scons or premake.
 
-Scons:
+## Scons:
 1. Open a command window to the Game directory
 2. Run 'scons'
 3. To generate a visual studio project file, run 'scons --projects'
 
-Premake:
+## Premake:
 Premake is currently only setup for development with Windows and Visual Studio 2013. For additional platform and compiler support, update the python5.py file.
+
 1. Make sure you have Python 2.7 installed
 2. Open a command window to the Game directory
 3. Run 'python .\bootstrap.py'
