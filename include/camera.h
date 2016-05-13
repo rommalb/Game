@@ -8,6 +8,7 @@ class Camera {
 public:
   Camera(sf::RenderWindow& window, sf::View& view);
   Camera(const Camera& copy) = delete;
+  Camera& operator=(const Camera& other) = delete;
 
   void move_to(const sf::Vector2f& position);
   void translate(const sf::Vector2f& offset);

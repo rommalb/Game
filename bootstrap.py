@@ -26,7 +26,7 @@
 
 from zipfile import ZipFile
 from urllib import urlretrieve
-from tempfile import mktemp
+import tempfile
 import os
 from distutils.dir_util import copy_tree
 import subprocess
@@ -43,19 +43,41 @@ def fileTypeExist(extn, dir):
 			return True
 	return False
 
-def downloadSFML(dllDestDirs, libDestDirs):
-	if not dllDestDirs and not libDestDirs:
-		print("No need to download SFML")
-		return 
-
-	filename = mktemp('.zip')
-	destDir = mktemp()
-	theurl = 'http://www.sfml-dev.org/files/SFML-2.3.2-windows-vc12-32-bit.zip'
+def downloadZipToTempDir(theurl):
 	print("Downloading from " + theurl)
-	name, hdrs = urlretrieve(theurl, filename)
-	thefile=ZipFile(filename)
+
+	tempZip = tempfile.mkstemp('.zip')
+	destDir = tempfile.mkdtemp()
+	name, hdrs = urlretrieve(theurl, tempZip[1])
+	thefile = ZipFile(tempZip[1])
 	thefile.extractall(destDir)
 	thefile.close()
+	os.close(tempZip[0])
+	os.remove(tempZip[1])
+	
+	return destDir
+
+def downloadPremake():
+	premakeFilePath = os.path.join(os.getcwd(), 'premake5.exe')
+	if os.path.isfile(premakeFilePath):
+		print("No need to download premake.")
+		return
+
+	destDir = downloadZipToTempDir('https://github.com/premake/premake-core/releases/download/v5.0.0-alpha8/premake-5.0.0-alpha8-windows.zip')
+	premakeDir = os.path.join(destDir, 'premake5.exe')
+	shutil.copy2(premakeDir, os.getcwd())
+	
+	if os.path.exists(destDir):
+		shutil.rmtree(destDir)
+
+
+def downloadSFML(dllDestDirs, libDestDirs):
+	if not dllDestDirs and not libDestDirs:
+		print("No need to download SFML.")
+		return 
+
+	theurl = 'http://www.sfml-dev.org/files/SFML-2.3.2-windows-vc12-32-bit.zip'
+	destDir = downloadZipToTempDir(theurl)
 
 	binFromDirectory = os.path.join(destDir, 'SFML-2.3.2', 'bin')
 	libFromDirectory = os.path.join(destDir, 'SFML-2.3.2', 'lib')
@@ -72,6 +94,9 @@ def downloadSFML(dllDestDirs, libDestDirs):
 		print("copying libs to " + dir)
 		copy_tree(libFromDirectory, dir)
 
+	if os.path.exists(destDir):
+		shutil.rmtree(destDir)
+
 
 # make build/bin/debug and /release folders if necessary
 def main():
@@ -80,6 +105,9 @@ def main():
 	debug_dir = os.path.join(build_dir, 'debug')
 	release_dir = os.path.join(build_dir, 'release')
 	lib_dir = os.path.join(os.getcwd(), 'contrib', 'SFML-2.3.2', 'lib')
+
+	# download the premake exe if necessary
+	downloadPremake()
 	
 	# store the dll and lib destinations that don't have what they need
 	dllDirs = []
@@ -103,7 +131,7 @@ def main():
 	downloadSFML(dllDirs, libDirs)
 
 	# copy the font file to the correct directory
-	print("Copying font file")
+	print("Copying font file.")
 	shutil.copy('arial.ttf', debug_dir)
 	shutil.copy('arial.ttf', release_dir)
 

@@ -69,6 +69,7 @@ project "Game"
 	}
 
 	flags {
+		"ExtraWarnings",
 		"FatalCompileWarnings",
 		"FatalLinkWarnings",
 		"FatalWarnings",

@@ -31,3 +31,4 @@
 projects/
 #Contrib folders (external binaries)
 contrib/
+build/
